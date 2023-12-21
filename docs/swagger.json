@@ -1,12 +1,12 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample todo-list server.",
-        "title": "Todo-List API",
+        "description": "This is a sample User-list server.",
+        "title": "User-List API",
         "contact": {},
         "license": {
             "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "url": "https://dailyprogrammer.net/"
         },
         "version": "1.0"
     },

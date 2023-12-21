@@ -12,7 +12,7 @@ const docTemplate = `{
         "contact": {},
         "license": {
             "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "url": "https://dailyprogrammer.net/"
         },
         "version": "{{.Version}}"
     },
@@ -203,8 +203,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Todo-List API",
-	Description:      "This is a sample todo-list server.",
+	Title:            "User-List API",
+	Description:      "This is a sample User-list server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -13,11 +13,11 @@ definitions:
     type: object
 info:
   contact: {}
-  description: This is a sample todo-list server.
+  description: This is a sample User-list server.
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Todo-List API
+    url: https://dailyprogrammer.net/
+  title: User-List API
   version: "1.0"
 paths:
   /user:

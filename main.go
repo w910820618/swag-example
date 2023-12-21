@@ -1,8 +1,8 @@
-// @title Todo-List API
+// @title User-List API
 // @version 1.0
-// @description This is a sample todo-list server.
+// @description This is a sample User-list server.
 // @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.url https://dailyprogrammer.net/
 // @BasePath /api/v1
 
 package main
