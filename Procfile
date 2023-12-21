@@ -1,1 +1,1 @@
-web: swag-example
+web: ./bin/swag-example
