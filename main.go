@@ -1,8 +1,8 @@
 // @title User-List API
 // @version 1.0
 // @description This is a sample User-list server.
-// @license.name Apache 2.0
-// @license.url https://dailyprogrammer.net/
+// @license.name Github Repository
+// @license.url https://github.com/w910820618/swag-example
 // @BasePath /api/v1
 
 package main

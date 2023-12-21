@@ -11,8 +11,8 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {},
         "license": {
-            "name": "Apache 2.0",
-            "url": "https://dailyprogrammer.net/"
+            "name": "Github Repository",
+            "url": "https://github.com/w910820618/swag-example"
         },
         "version": "{{.Version}}"
     },

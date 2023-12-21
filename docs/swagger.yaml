@@ -15,8 +15,8 @@ info:
   contact: {}
   description: This is a sample User-list server.
   license:
-    name: Apache 2.0
-    url: https://dailyprogrammer.net/
+    name: Github Repository
+    url: https://github.com/w910820618/swag-example
   title: User-List API
   version: "1.0"
 paths:
