@@ -18,11 +18,5 @@ Backend:
 $ make
 $ make run
 ```
-
-Frontend:
-
-```shell
-$ cd ui
-$ yarn
-$ yarn start
-```
+swagger URL
+http://localhost:8080/swagger/index.html.
