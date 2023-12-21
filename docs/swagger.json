@@ -12,62 +12,78 @@
     },
     "basePath": "/api/v1",
     "paths": {
-        "/todos": {
+        "/user": {
             "get": {
-                "description": "get the list of todos",
+                "description": "Get all users",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Show all todos",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get all users",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "ok",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/main.Todo"
-                            }
+                            "type": "string"
                         }
                     }
                 }
             },
             "post": {
+                "description": "Create a user",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add a new todo",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create a user",
                 "parameters": [
                     {
-                        "description": "Todo Content",
-                        "name": "request",
+                        "description": "User",
+                        "name": "User",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.AddTodoReq"
+                            "$ref": "#/definitions/main.User"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/main.Todo"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/todos/{id}": {
+        "/user/{id}": {
             "get": {
-                "description": "get the single todo by ID",
+                "description": "Get a user",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Show a single todo",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get a user",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "TODO ID",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -75,103 +91,99 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/main.Todo"
+                            "type": "string"
                         }
-                    },
-                    "404": {
-                        "description": "no content"
                     }
                 }
             },
             "put": {
-                "description": "update a single todo by ID",
-                "summary": "Update a todo",
+                "description": "Update a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update a user",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Todo ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Todo Body",
-                        "name": "request",
+                        "description": "User",
+                        "name": "User",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.UpdateTodoReq"
+                            "$ref": "#/definitions/main.User"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "no content"
-                    },
-                    "404": {
-                        "description": "no content"
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
             "delete": {
-                "description": "delete a single todo by ID",
-                "summary": "Delete a todo",
+                "description": "Delete a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Delete a user",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Todo ID",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "no content"
-                    },
-                    "404": {
-                        "description": "no content"
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
-        "main.AddTodoReq": {
+        "main.User": {
             "type": "object",
             "properties": {
-                "content": {
+                "address": {
                     "type": "string"
-                }
-            }
-        },
-        "main.Todo": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "integer"
-                },
-                "done": {
-                    "type": "boolean"
                 },
                 "id": {
-                    "type": "string"
-                }
-            }
-        },
-        "main.UpdateTodoReq": {
-            "type": "object",
-            "properties": {
-                "content": {
+                    "type": "integer"
+                },
+                "telephone": {
                     "type": "string"
                 },
-                "done": {
-                    "type": "boolean"
+                "username": {
+                    "type": "string"
                 }
             }
         }

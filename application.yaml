@@ -1,0 +1,8 @@
+mysql:
+  url: lyn7gfxo996yjjco.cbetxkdyhwsb.us-east-1.rds.amazonaws.com
+  port: 3306
+  password: 12345678
+  username: root
+  database: nqmnfiyf5dqabue7
+
+port: 8082

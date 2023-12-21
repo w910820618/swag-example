@@ -1,27 +1,15 @@
 basePath: /api/v1
 definitions:
-  main.AddTodoReq:
+  main.User:
     properties:
-      content:
+      address:
         type: string
-    type: object
-  main.Todo:
-    properties:
-      content:
-        type: string
-      created_at:
-        type: integer
-      done:
-        type: boolean
       id:
+        type: integer
+      telephone:
         type: string
-    type: object
-  main.UpdateTodoReq:
-    properties:
-      content:
+      username:
         type: string
-      done:
-        type: boolean
     type: object
 info:
   contact: {}
@@ -32,54 +20,49 @@ info:
   title: Todo-List API
   version: "1.0"
 paths:
-  /todos:
+  /user:
     get:
-      description: get the list of todos
+      consumes:
+      - application/json
+      description: Get all users
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: ok
           schema:
-            items:
-              $ref: '#/definitions/main.Todo'
-            type: array
-      summary: Show all todos
+            type: string
+      summary: Get all users
+      tags:
+      - user
     post:
+      consumes:
+      - application/json
+      description: Create a user
       parameters:
-      - description: Todo Content
+      - description: User
         in: body
-        name: request
+        name: User
         required: true
         schema:
-          $ref: '#/definitions/main.AddTodoReq'
+          $ref: '#/definitions/main.User'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: ok
           schema:
-            $ref: '#/definitions/main.Todo'
-      summary: Add a new todo
-  /todos/{id}:
+            type: string
+      summary: Create a user
+      tags:
+      - user
+  /user/{id}:
     delete:
-      description: delete a single todo by ID
+      consumes:
+      - application/json
+      description: Delete a user
       parameters:
-      - description: Todo ID
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "204":
-          description: no content
-        "404":
-          description: no content
-      summary: Delete a todo
-    get:
-      description: get the single todo by ID
-      parameters:
-      - description: TODO ID
+      - description: id
         in: path
         name: id
         required: true
@@ -88,30 +71,56 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: ok
           schema:
-            $ref: '#/definitions/main.Todo'
-        "404":
-          description: no content
-      summary: Show a single todo
-    put:
-      description: update a single todo by ID
+            type: string
+      summary: Delete a user
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: Get a user
       parameters:
-      - description: Todo ID
+      - description: id
         in: path
         name: id
         required: true
         type: string
-      - description: Todo Body
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Get a user
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Update a user
+      parameters:
+      - description: User
         in: body
-        name: request
+        name: User
         required: true
         schema:
-          $ref: '#/definitions/main.UpdateTodoReq'
+          $ref: '#/definitions/main.User'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
-        "204":
-          description: no content
-        "404":
-          description: no content
-      summary: Update a todo
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Update a user
+      tags:
+      - user
 swagger: "2.0"

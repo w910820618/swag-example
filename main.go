@@ -8,28 +8,25 @@
 package main
 
 import (
+	"flag"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/golang/glog"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	cors "github.com/rs/cors/wrapper/gin"
-
 	// for generate swagger ui
 	_ "swag-example/docs"
-
-	swaggerFiles "github.com/swaggo/files"     // swagger embed files
-	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
 
-type Todo struct {
-	ID        string `json:"id"`
-	Content   string `json:"content"`
-	Done      bool   `json:"done"`
-	CreatedAt int64  `json:"created_at"`
+func init() {
+	flag.Set("logtostderr", "true") // 输出到标准错误流
+	flag.Set("v", "3")              // 输出级别为 3
+	flag.Parse()
+	glog.Info("Program started.")
 }
-
-var todos = make([]Todo, 0)
 
 func MWHandleErrors() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -52,18 +49,29 @@ func MWHandleErrors() gin.HandlerFunc {
 }
 
 func main() {
+
 	r := gin.Default()
-	r.Use(cors.AllowAll())
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://foo.com"},
+		AllowMethods:     []string{"PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://127.0.0.1"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 	r.Use(MWHandleErrors())
 	v1 := r.Group("/api/v1")
 	{
-		todos := v1.Group("/todos")
+		users := v1.Group("/user")
 		{
-			todos.GET(":id", todoHandler)
-			todos.GET("", listHandler)
-			todos.POST("", addHandler)
-			todos.DELETE(":id", deleteHandler)
-			todos.PUT(":id", updateHandler)
+			users.GET(":id", getUser)
+			users.GET("", listUser)
+			users.POST("", addUser)
+			users.DELETE(":id", deleteUser)
+			users.PUT(":id", updateUser)
 		}
 	}
 	// must access /swagger/index.html
@@ -73,127 +81,85 @@ func main() {
 	_ = r.Run()
 }
 
-// @Summary Show a single todo
-// @Description get the single todo by ID
-// @Produce json
-// @Param id path string true "TODO ID"
-// @Success 200 {object} Todo
-// @Failure 404 "no content"
-// @Router /todos/{id} [get]
-func todoHandler(c *gin.Context) {
+// @Summary Create a user
+// @Description Create a user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param   User    body User true "User"
+// @Success 200 {string} string	"ok"
+// @Router /user [post]
+func addUser(c *gin.Context) {
+	var user User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.Error(err)
+		return
+	}
+	db.Create(&user)
+	c.JSON(http.StatusOK, user)
+}
+
+// @Summary Get a user
+// @Description Get a user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param   id     path string true "id"
+// @Success 200 {string} string	"ok"
+// @Router /user/{id} [get]
+func getUser(c *gin.Context) {
+	var user User
 	id := c.Param("id")
-	var todo *Todo
-	for _, v := range todos {
-		if v.ID == id {
-			todo = &v
-			break
-		}
-	}
-	if todo == nil {
-		c.Status(http.StatusNotFound)
-		return
-	}
-
-	c.JSON(http.StatusOK, todo)
+	db.First(&user, id)
+	c.JSON(http.StatusOK, user)
 }
 
-// @Summary Show all todos
-// @Description get the list of todos
-// @Produce json
-// @Success 200 {array} Todo
-// @Router /todos [get]
-func listHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, todos)
+// @Summary Get all users
+// @Description Get all users
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} string	"ok"
+// @Router /user [get]
+func listUser(c *gin.Context) {
+	var users []User
+	db.Find(&users)
+	c.JSON(http.StatusOK, users)
 }
 
-type AddTodoReq struct {
-	Content string `json:"content"`
-}
-
-// @Summary Add a new todo
-// @Produce json
-// @Param request body AddTodoReq true "Todo Content"
-// @Success 200 {object} Todo
-// @Router /todos [post]
-func addHandler(c *gin.Context) {
-	var req AddTodoReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	todo := Todo{
-		ID:        uuid.New().String(),
-		Content:   req.Content,
-		Done:      false,
-		CreatedAt: time.Now().Unix(),
-	}
-	todos = append(todos, todo)
-	c.JSON(http.StatusOK, todo)
-}
-
-// @Summary Delete a todo
-// @Description delete a single todo by ID
-// @Param id path string true "Todo ID"
-// @Success 204 "no content"
-// @Failure 404 "no content"
-// @Router /todos/{id} [delete]
-func deleteHandler(c *gin.Context) {
+// @Summary Update a user
+// @Description Update a user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param   User   body User true "User"
+// @Param   id     path string true "id"
+// @Success 200 {string} string	"ok"
+// @Router /user/{id} [put]
+func updateUser(c *gin.Context) {
+	var user User
 	id := c.Param("id")
-	var todo *Todo
-	var idx int
-	for i, v := range todos {
-		if v.ID == id {
-			todo = &v
-			idx = i
-			break
-		}
-	}
-	if todo == nil {
-		c.Status(http.StatusNotFound)
+	db.First(&user, id)
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.Error(err)
 		return
 	}
-
-	todos[idx] = todos[len(todos)-1]
-	todos = todos[:len(todos)-1]
-	c.Status(http.StatusNoContent)
+	db.Model(&user).Update(&user)
+	c.JSON(http.StatusOK, user)
 }
 
-type UpdateTodoReq struct {
-	Content string `json:"content"`
-	Done    bool   `json:"done"`
-}
-
-// @Summary Update a todo
-// @Description update a single todo by ID
-// @Param id path string true "Todo ID"
-// @Param request body UpdateTodoReq true "Todo Body"
-// @Success 204 "no content"
-// @Failure 404 "no content"
-// @Router /todos/{id} [put]
-func updateHandler(c *gin.Context) {
-	var req UpdateTodoReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		_ = c.Error(err)
-		return
-	}
-
+// @Summary Delete a user
+// @Description Delete a user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param   id     path string true "id"
+// @Success 200 {string} string	"ok"
+// @Router /user/{id} [delete]
+func deleteUser(c *gin.Context) {
+	var user User
 	id := c.Param("id")
-	var todo *Todo
-	var idx int
-	for i, v := range todos {
-		if v.ID == id {
-			todo = &v
-			idx = i
-			break
-		}
-	}
-	if todo == nil {
-		c.Status(http.StatusNotFound)
-		return
-	}
-
-	todos[idx].Content = req.Content
-	todos[idx].Done = req.Done
-	c.Status(http.StatusNoContent)
+	db.First(&user, id)
+	db.Delete(&user)
+	c.JSON(http.StatusOK, user)
 }
